@@ -1,3 +1,10 @@
+Changes upto version 1.2.6:
+--------------------------
+
+o Incorporated fixes from Debian maintainer's patches
+    https://packages.ubuntu.com/source/focal/wmfire
+o Fixed window borders to be compatible with different WindowMaker themes but still look like old style
+
 Changes upto version 1.2.5:
 --------------------------
 

@@ -1,0 +1,260 @@
+wmfire (1.2.4-4) unstable; urgency=medium
+
+  * Fix FTCBFS by using PKG_CHECK_MODULES in configure.ac (closes: #933550).
+
+ -- Jeremy Sowden <jeremy@azazel.net>  Wed, 31 Jul 2019 21:28:42 +0100
+
+wmfire (1.2.4-3) unstable; urgency=medium
+
+  [ Doug Torrance ]
+  * Update Vcs-* after migration to Salsa.
+  * Update Format in d/copyright to https.
+
+  [ Jeremy Sowden ]
+  * Updated watch-file and home-page.
+  * Bumped compat to 12.
+  * Added patch to remove inline from extern function (closes: #925858).
+  * Added patch to change function linkage to static where possible.
+  * Added build-dep on debhelper-compat and removed debian/compat.
+  * Updated uploaders.
+  * Enabled hardening.
+  * Added new patch to fix typo's in usage.
+  * Bumped Standards-Version to 4.4.0.
+
+ -- Jeremy Sowden <jeremy@azazel.net>  Sun, 28 Jul 2019 13:33:50 +0100
+
+wmfire (1.2.4-2) unstable; urgency=medium
+
+  * debian/control
+    - Update Vcs-* fields.
+    - Set Debian Window Maker Team as Maintainer; move myself to
+      Uploaders with updated email address.
+  * debian/{copyright,patches}
+    - Update email address.
+
+ -- Doug Torrance <dtorrance@piedmont.edu>  Sun, 23 Aug 2015 23:36:05 -0400
+
+wmfire (1.2.4-1) unstable; urgency=medium
+
+  * New upstream release.
+  * New maintainer (Closes: #775470).
+  * debian/compat:
+    - Bump to 9.
+  * debian/control:
+    - Bump versioned dependency on debhelper to >=9.
+    - Bump Standards-Version to 3.9.6.
+    - Move Homepage from Description to its own field.
+    - Add Vcs-*.
+    - Remove cdbs from Build-Depends.
+    - Add ${misc:Depends} to Depends.
+    - Remove versioned dependency on libgtop2-dev; no earlier version
+      still exists in Debian.
+    - Replace autotools-dev with dh-autoreconf in Build-Depends.
+  * debian/control:
+    - Lengthen long description with information from wmfire homepage.
+  * debian/copyright:
+    - Update to DEP5 machine-readable format, version 1.0.
+  * debian/dirs:
+    - Remove unnecessary file.
+  * debian/docs:
+    - Add AUTHORS, NEWS, and README.
+    - Remove ALL_I_GET_IS_A_GREY_BOX; no longer relevant.
+  * debian/patches:
+    - (rename_configure.in.patch) Silence deprecated-configure-filename
+      Lintian warning.
+    - (fix_manpage.patch) Escape hyphens.
+    - (01_resource.patch) Convert to quilt; add DEP3 header.
+    - (gdk_updates.patch) Update for newer versions of GDK.
+    - (update_autotools.patch) Silence various autotools warnings.
+    - (fix_-Wunused-result.patch) Fix compiler warning.
+    - (freebsd_port.patch) Port to Debian GNU/kFreeBSD.
+  * debian/rules:
+    - Add get-orig-source target.
+    - Update to use dh.
+    - Use dh_autoreconf.
+    - Append "-Wl, --as-needed" to LDFLAGS to reduce "useless dependency"
+      warnings from dpkg-shlibdeps.
+  * debian/source/format:
+    - New file; use 3.0 (quilt).
+  * debian/upstream/signing-key.asc:
+    - New file.
+  * debian/watch:
+    - Remove unused parameters.
+    - Add pgpsigurlmangle option.
+  * debian/wmfire.menu:
+    - Update Section.
+    - Add newlines for readability.
+    - Rename to debian/menu.
+
+ -- Doug Torrance <dtorrance@monmouthcollege.edu>  Mon, 19 Jan 2015 07:18:29 -0600
+
+wmfire (1.2.3-2) unstable; urgency=low
+
+  * Update Standards-Version to 3.7.2 (no changes required).
+  * New maintainer email address.
+
+ -- Charles Fry <cfry@debian.org>  Wed,  5 Jul 2006 11:15:25 -0400
+
+wmfire (1.2.3-1) unstable; urgency=low
+
+  * New upstream release (Closes: #341255).
+  * Remove unused maintainer scripts.
+  * Simplify build dependencies in debian/control.
+  * Build with autotools.
+
+ -- Charles Fry <debian@frogcircus.org>  Tue,  6 Dec 2005 10:58:02 -0500
+
+wmfire (1.2.2-1) unstable; urgency=low
+
+  * New upstream release (Closes: #328475).
+  * Move to CDBS and dpatch.
+
+ -- Charles Fry <debian@frogcircus.org>  Thu, 29 Sep 2005 08:08:03 -0400
+
+wmfire (1.2.1-6) unstable; urgency=low
+
+  * New maintainer (Closes: #326779).
+  * Acknowledge previous NMU (Closes: #326575).
+
+ -- Charles Fry <debian@frogcircus.org>  Wed,  7 Sep 2005 01:23:45 -0400
+
+wmfire (1.2.1-5) unstable; urgency=low
+
+  * Orphan package and set maintainer to Debian QA Group.
+  * Bump Standards-Version to 3.6.2 (no changes required).
+  * Update FSF address in debian/copyright.
+  * Bump the version of the libgtop2-dev build dependency to get a
+    version past the SONAME change (Closes: #316764, #322524).
+  * Break up build dependencies for the xorg transition:
+    - Remove xlibs-dev.
+    - Add libxt-dev (for the AC_PATH_X macro to detect X), upstream
+      should specialize the macro call if they don't need this lib.
+    - Add libx11-dev.
+    - Add libxext-dev.
+
+ -- Loic Minier <lool@dooz.org>  Sun,  4 Sep 2005 10:06:12 +0200
+
+wmfire (1.2.1-4) unstable; urgency=low
+
+  * Apply the patch from Alan Swanson (see #250937)
+    (Closes: #250937, #256782).
+  * Adjust mandir to be FHS 2.1 compatible.
+
+ -- Christoph Siess (CHS) <chs@geekhost.info>  Tue, 17 Aug 2004 15:49:00 +0000
+
+wmfire (1.2.1-3) unstable; urgency=low
+
+  * Update Build-Depends for libgtop2-dev to >=2.6.0-4 (Closes: #252189).
+  * Sponsored by Martin Wuertele <maxx@debian.org>.
+
+ -- Christoph Siess (CHS) <chs@geekhost.info>  Sat, 12 Jun 2004 13:27:21 +0200
+
+wmfire (1.2.1-2) unstable; urgency=low
+
+  * Rebuild against libgtop-2.2 (Closes: #252189).
+  * Sponsored by Martin Wuertele <maxx@debian.org>
+
+ -- Christoph Siess (CHS) <chs@geekhost.info>  Sun,  6 Jun 2004 13:55:52 +0000
+
+wmfire (1.2.1-1) unstable; urgency=low
+
+  * New upstream release (Closes: #242536).
+  * Manually apply the patch from Christof Douma (see #228357).
+  * Some very small changes in wmfire.menu.
+  * Sponsored by Martin Wuertele <maxx@debian.org>.
+
+ -- Christoph Siess (CHS) <chs@geekhost.info>  Sun,  9 May 2004 20:37:58 +0200
+
+wmfire (1.1.99-5) unstable; urgency=low
+
+  * Use proper section for the manpage.
+  * Fix formatting in manpage.
+  * Apply a patch from Christof Douma to manually set the
+    X resource name (Closes: #228357).
+
+ -- Christoph Siess (CHS) <chs@geekhost.info>  Sun, 18 Jan 2004 19:25:55 +0100
+
+wmfire (1.1.99-4) unstable; urgency=low
+
+  * New maintainer.
+  * Remove config.{log,cache,status} in build-stamp target in debian/rules
+    to clean up upstream cruft.
+  * Update config.sub and config.guess.
+
+ -- Christoph Siess (CHS) <chs@geekhost.info>  Fri,  2 Jan 2004 14:09:20 +0100
+
+wmfire (1.1.99-3) unstable; urgency=low
+
+  * New maintainer (Closes: #210794).
+  * Add menu file debian/wmfire.menu.
+
+ -- Christoph Siess (CHS) <chs@geekhost.info>  Fri,  2 Jan 2004 11:41:38 +0100
+
+wmfire (1.1.99-2) unstable; urgency=low
+
+  * Transition from libgtop-dev to libgtop2-dev in Build-Depends (Closes: #225225).
+
+ -- Søren Boll Overgaard <boll@debian.org>  Sun, 28 Dec 2003 15:34:32 +0000
+
+wmfire (1.1.99-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Søren Boll Overgaard <boll@debian.org>  Sun, 21 Dec 2003 22:37:20 +0000
+
+wmfire (1.0.0-3) unstable; urgency=low
+
+  * Update manpage to reflect the new program options (Closes: #165589).
+
+ -- Søren Boll Overgaard <boll@debian.org>  Sun, 20 Oct 2002 18:17:47 +0200
+
+wmfire (1.0.0-2) unstable; urgency=low
+
+  * Add missing libgtk2.0-dev and libgnome-dev to Build-Depends,
+    fixes FTBFS (Closes: #165437).
+
+ -- Søren Boll Overgaard <boll@debian.org>  Sat, 19 Oct 2002 11:20:00 +0200
+
+wmfire (1.0.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * New maintainer (Closes: #164989).
+  * New upstream maintainer.
+  * Install manpage for wmfire (Closes: #87084).
+  * Add libgtop2-dev to Build-Depends.
+  * Don't leave processes hanging (Closes: #98391).
+
+ -- Søren Boll Overgaard <boll@debian.org>  Fri, 18 Oct 2002 10:31:15 +0200
+
+wmfire (0.0.3.9pre4-2) unstable; urgency=low
+
+  * Fix typo in description in debian/control (Closes: #125490).
+  * Install wmfire into /usr/bin not /usr/X11R6/bin.
+  * Remove 'undocumented manpage' (Closes: #87084).
+
+ -- Ryuichi Arafune <arafune@debian.org>  Sat, 22 Dec 2001 14:46:20 +0900
+
+wmfire (0.0.3.9pre4-1) unstable; urgency=low
+
+  * New upstream release (Closes: #46005, #61321).
+
+ -- Ryuichi Arafune <arafune@debian.org>  Mon,  3 Apr 2000 20:18:50 +0900
+
+wmfire (0.0.3.8-3) unstable; urgency=low
+
+  * Remove empty README.Debian (Closes: #54371).
+
+ -- Ryuichi Arafune <arafune@debian.org>  Sat,  8 Jan 2000 09:29:04 +0900
+
+wmfire (0.0.3.8-2) unstable; urgency=low
+
+  * Move /usr/doc to /usr/share/doc/, use debhelper 2.0.40.
+  * Make package lintian-clean.
+
+ -- Ryuichi Arafune <arafune@debian.org>  Tue,  7 Sep 1999 20:31:51 +0900
+
+wmfire (0.0.3.8-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Ryuichi Arafune <arafune@debian.org>  Fri, 27 Aug 1999 12:33:40 +0900

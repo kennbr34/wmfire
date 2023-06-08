@@ -99,8 +99,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__wmfire_SOURCES_DIST = wmfire.c flamedefault.h flamecorona.h \
-	flameblue.h flamegreen.h flameorange.h flamedarkblue.h \
-	flamegreen_msb.h flamecorona_msb.h session.h session.c
+	flameblue.h flamegreen.h session.h session.c
 @SESSION_FALSE@am_wmfire_OBJECTS = wmfire.$(OBJEXT)
 @SESSION_TRUE@am_wmfire_OBJECTS = wmfire.$(OBJEXT) session.$(OBJEXT)
 wmfire_OBJECTS = $(am_wmfire_OBJECTS)
@@ -255,17 +254,17 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @SESSION_FALSE@wmfire_SOURCES = wmfire.c \
-@SESSION_FALSE@	flamedefault.h flamecorona.h flameblue.h flamegreen.h flameorange.h flamedarkblue.h flamegreen_msb.h flamecorona_msb.h
+@SESSION_FALSE@	flamedefault.h flamecorona.h flameblue.h flamegreen.h
 
 @SESSION_TRUE@wmfire_SOURCES = wmfire.c \
 @SESSION_TRUE@	session.h session.c \
-@SESSION_TRUE@	flamedefault.h flamecorona.h flameblue.h flamegreen.h flameorange.h flamedarkblue.h flamegreen_msb.h flamecorona_msb.h
+@SESSION_TRUE@	flamedefault.h flamecorona.h flameblue.h flamegreen.h
 
 wmfire_LDADD = @LDFLAGS@
 AM_LDFLAGS = -lXext -lX11 \
 	-L/usr/X11R6/lib -L/usr/local/lib
 
-INCLUDES = -I/usr/X11R6/include \
+AM_CPPFLAGS = -I/usr/X11R6/include \
 	-I/usr/local/include
 
 all: all-am

@@ -8,22 +8,21 @@ wmfire \- Fiery dock app monitor
 
 .SH SYNOPSIS
 .B wmfire
-[-b]
-[-c CPU]
-[-f COLOUR]
-[-F FILE]
-[-g GEOMETRY]
-[-h]
-[-H MAX]
-[-i INTERFACE]
-[-l]
-[-L MIN]
-[-m]
-[-n]
-[-p]
-[-s SPEED]
-[-x]
-[-y]
+[\-c CPU]
+[\-f COLOUR]
+[\-F FILE]
+[\-g GEOMETRY]
+[\-h]
+[\-H MAX]
+[\-i INTERFACE]
+[\-l]
+[\-L MIN]
+[\-m]
+[\-n]
+[\-p]
+[\-s SPEED]
+[\-x]
+[\-y]
 
 .SH "DESCRIPTION"
 .PP
@@ -54,63 +53,64 @@ a spinning disk platter is shown.
 
 .SH OPTIONS
 .TP
-.B -b
-Activate broken window manager fix (if grey box diplayed)
-.TP
-.B -c [0..3]
+.B \-c [0..3]
 .br
 Monitor SMP CPU number X
 .TP
-.B -f [1..4]
+.B \-f [1..4]
 Change flame colour
 .br
 (1:Natural 2:Coronal 3:Blue 4:Green)
 .TP
-.B -F [...]
+.B \-F [...]
 Monitor file
 .TP
-.B -g [{+-}X{+-}Y]
+.B \-g [{+-}X{+-}Y]
 Set initial window position
 .TP
-.B -h
+.B \-h
 Show help
 .TP
-.B -H [...]
+.B \-H [...]
 Set maximum (high) value for file monitoring
 .TP
-.B -i [...]
+.B \-i [...]
 Change the network interface
 .br
 (Default is "ppp0")
 .TP
-.B -l
+.B \-l
 Lock flame colour and monitor
 .TP
-.B -L [...]
+.B \-L [...]
 Set minimum (low) value for file monitoring
 .TP
-.B -m
+.B \-m
 Monitor the memory load
 .TP
-.B -n
+.B \-n
 Monitor the network traffic
 .TP 
-.B -p
+.B \-p
 Fire effect only (no monitoring)
 .TP
-.B -s [...][K|M]
+.B \-r
+.RI [ ... ]
+Change resource name (default:wmfire)
+.TP
+.B \-s [...][K|M]
 Change the network speed - kilobytes or megabytes
 .br
 (Automatic preset values for interfaces: ppp=56K eth=100M)
 .TP
-.B -x
+.B \-x
 Exclude nice'd CPU load
 .TP
-.B -y
+.B \-y
 Set window sticky for window managers which do not support dock apps
 
 .SH "EXAMPLES"
-.B wmfire -F /tmp/file -L 40 -H 60 -i eth2 -s 1000M
+.B wmfire \-F /tmp/file \-L 40 \-H 60 \-i eth2 \-s 1000M
 
 .SH "NOTES"
 The file monitoring will only read the first value in a file. For complex

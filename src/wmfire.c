@@ -28,8 +28,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <math.h>
-#include <arpa/inet.h>
-#include <byteswap.h>
 
 #include <gdk/gdk.h>
 #include <gdk/gdkx.h>
@@ -38,6 +36,10 @@
 #include <glibtop/cpu.h>
 #include <glibtop/mem.h>
 #include <glibtop/netload.h>
+
+#if defined __FreeBSD__ || __FreeBSD_kernel__
+#include <netinet/tcp_var.h>
+#endif
 
 #include "session.h"
 #include "flamedefault.h"
@@ -49,15 +51,14 @@
 #include "flamegreen_msb.h"
 #include "flamecorona_msb.h"
 
-#include "master.xpm"
 #include "icon.xpm"
 
 /******************************************/
 /* Defines                                */
 /******************************************/
 
-#define XMAX 56
-#define YMAX 56
+#define XMAX 57
+#define YMAX 57
 #define CMAPSIZE (XMAX * YMAX)
 #define RGBSIZE (XMAX * YMAX * 4)
 #define NCOLOURS 256
@@ -83,8 +84,6 @@
 typedef struct {
 	GdkDisplay *display;	/* X11 display */
 	GdkWindow *win;		/* Main window */
-	GdkWindow *iconwin;	/* Icon window */
-	GdkPixbuf *pixmap;	/* Main pixmap */
 
 	int x;			/* Window X position */
 	int y;			/* Window Y position */
@@ -104,19 +103,19 @@ typedef struct {
 /* Functions                              */
 /******************************************/
 
-int update_cpu();
-int update_mem();
-int update_net();
-int update_file();
-int change_cpu(int);
-void change_flame(int);
-GdkCursor *setup_cursor();
-void burn_spot(int, int, int);
-static inline void draw_fire(unsigned int);
+static int update_cpu();
+static int update_mem();
+static int update_net();
+static int update_file();
+static int change_cpu(int);
+static void change_flame(int);
+static GdkCursor *setup_cursor();
+static void burn_spot(int, int, int);
+static void draw_fire(unsigned int);
 static void make_wmfire_dockapp();
 void convert_colormaps_to_lsb(void);
-void read_config(int, char **);
-void do_help(void);
+static void read_config(int, char **);
+static void do_help(void);
 
 /******************************************/
 /* Globals                                */
@@ -142,7 +141,8 @@ int load = 100;
 int cpu_av = 1;
 int cpu_id = 0;
 int cpu_nice = 1;
-char net_dev[16] = "wlp3s0";
+char net_dev[16] = "ppp0";
+char resource_name[64] = "wmfire";
 int net_spd = 0;
 char *file_name = NULL;
 int file_max = 100;
@@ -168,8 +168,7 @@ main(int argc, char **argv)
 	srand(time(NULL));
 
 	/* Initialize GDK */
-	int result = (int)gdk_init_check(&argc,&argv);
-	if (!result) {
+	if (!gdk_init_check(&argc, &argv)) {
 		fprintf(stderr, "GDK init failed. Check \"DISPLAY\" variable.\n");
 		exit(-1);
 	}
@@ -191,7 +190,7 @@ main(int argc, char **argv)
 
 	/* Create dockapp window. creates windows, allocates memory, etc */
 	make_wmfire_dockapp();
-    
+
 	while (1) {
 		while (gdk_events_pending()) {
 			event = gdk_event_get();
@@ -199,7 +198,7 @@ main(int argc, char **argv)
 				switch (event->type) {
 				case GDK_DESTROY:
 				case GDK_DELETE:
-                    /* No equivalent function in GTK3 but does not seem to affect anything */
+					/* No equivalent function in GTK3 but does not seem to affect anything */
 					//gdk_cursor_destroy(cursor);
 					exit(0);
 					break;
@@ -273,7 +272,7 @@ main(int argc, char **argv)
 		draw_fire(load);
 
 		usleep(REFRESH);
-        
+
 		///* Draw the rgb buffer to screen */
         int stride;
         int format = CAIRO_FORMAT_RGB24;
@@ -283,26 +282,23 @@ main(int argc, char **argv)
         memcpy(data,bm.rgb,sizeof(unsigned char) * RGBSIZE);
         
         /* Initialize Cairo drawing */
-        cairo_rectangle_int_t cairo_rec = {0, 0, 64, 64};
+        cairo_rectangle_int_t cairo_rec = {3, 3, 57, 57};
         cairo_region_t * cairo_region = cairo_region_create_rectangle (&cairo_rec);
         GdkDrawingContext * gdk_drawing_context = gdk_window_begin_draw_frame (bm.win,cairo_region);
         cairo_t *cr = gdk_drawing_context_get_cairo_context (gdk_drawing_context);
         
-        /*Deprecated way to create it*/
-        //cairo_t *cr = gdk_cairo_create (bm.win);
-        
-        /* Create white rectangle to draw behind flame as border */
+        //* Create gray rectangle to draw behind flame as border */
         cairo_set_line_width (cr, 0.01);
-        cairo_set_source_rgb (cr, 255, 255, 255);
-        cairo_rectangle (cr, 0, 0, 1, 1);
+        cairo_set_source_rgb (cr, 0.75, 0.75, 0.75);
+        cairo_rectangle (cr, 1, 1, 0.1, 0.1);
         cairo_stroke (cr);
         cairo_paint (cr);
-        
+                        
         /* Load pixel map into Cairo surface to draw */
         cairo_surface_t *surface;
         stride = cairo_format_stride_for_width (format, XMAX);
         surface = cairo_image_surface_create_for_data(data, format, XMAX, YMAX, stride );
-        cairo_set_source_surface( cr, surface, 0, 0 );
+        cairo_set_source_surface( cr, surface, 2, 2 );
         cairo_paint( cr );
         
         /* Tell Cairo we're done drawing */
@@ -311,10 +307,8 @@ main(int argc, char **argv)
         /* Clean up Cairo structures */
         cairo_region_destroy(cairo_region);
         //cairo_destroy( cr );
-        cairo_surface_destroy( surface );        
-        
+        cairo_surface_destroy( surface ); 
 	}
-
 	return 0;
 }
 
@@ -322,7 +316,7 @@ main(int argc, char **argv)
 /* Update cpu load statistics             */
 /******************************************/
 
-int
+static int
 update_cpu()
 {
 	glibtop_cpu cpu;
@@ -363,7 +357,7 @@ update_cpu()
 /* Update memory statistics               */
 /******************************************/
 
-int
+static int
 update_mem()
 {
 	glibtop_mem mem;
@@ -383,12 +377,45 @@ update_mem()
 /* Update network statistics              */
 /******************************************/
 
-int
+#if defined __FreeBSD__ || __FreeBSD_kernel__
+#define GETSYSCTL(name, var) getsysctl(name, &(var), sizeof(var))
+
+static void
+getsysctl(const char *name, void *ptr, size_t len)
+{
+	size_t nlen = len;
+
+	if (sysctlbyname(name, ptr, &nlen, NULL, 0) == -1) {
+		fprintf(stderr, "sysctl(%s...) failed: %s\n", name,
+			strerror(errno));
+		exit(1);
+	}
+	if (nlen != len) {
+		fprintf(stderr, "sysctl(%s...) expected %lu, got %lu\n",
+			name, (unsigned long)len, (unsigned long)nlen);
+		exit(1);
+	}
+}
+#endif
+
+static int
 update_net()
 {
+	int percent;
+
+#if defined __FreeBSD__ || __FreeBSD_kernel__
+	struct tcpstat netload;
+	uint64_t total;
+	static uint64_t oldtotal = 0;
+
+ 	GETSYSCTL("net.inet.tcp.stats", netload);
+	total = netload.tcps_sndbyte + netload.tcps_rcvbyte;
+	percent = 100 * (total - oldtotal) / (net_spd / UPDATE_SEC);
+
+	oldtotal = total;
+#else
 	glibtop_netload netload;
 	static guint64 oldtotal = 0;
-	int percent;
 
 	glibtop_get_netload(&netload,net_dev);
 
@@ -396,6 +423,7 @@ update_net()
 	percent = 100 * (netload.bytes_total - oldtotal) / (net_spd / UPDATE_SEC);
 
 	oldtotal = netload.bytes_total;
+#endif
 
 	return percent;
 }
@@ -404,7 +432,7 @@ update_net()
 /* Update file statistics                 */
 /******************************************/
 
-int
+static int
 update_file()
 {
 	char buf[128];
@@ -417,7 +445,8 @@ update_file()
 	/* First number only. Complex parsing should be done in */
 	/* external program and value saved to monitored file.  */
 
-	fgets(buf, sizeof (buf), fp);
+	if (fgets(buf, sizeof (buf), fp) == NULL)
+		fprintf(stderr, "warning: file '%s' is empty\n", file_name);
 	number = atof(buf);
 	fclose(fp);
 
@@ -430,7 +459,7 @@ update_file()
 /* Change CPU monitor                     */
 /******************************************/
 
-int
+static int
 change_cpu(int which)
 {
 	glibtop_cpu cpu;
@@ -460,7 +489,7 @@ change_cpu(int which)
 /* Change flame effect                    */
 /******************************************/
 
-void
+static void
 change_flame(int which)
 {
 	if (which > 0 && which <= NFLAMES)
@@ -477,10 +506,10 @@ change_flame(int which)
 /* Setup invisible cursor                 */
 /******************************************/
 
-GdkCursor *
+static GdkCursor *
 setup_cursor()
-{    
-    GdkDisplay* display = gdk_display_get_default();
+{
+	GdkDisplay* display = gdk_display_get_default();
     GdkCursor *cursor;
     cairo_surface_t *s;
     cairo_t *cr;
@@ -509,7 +538,8 @@ setup_cursor()
 /* Burn spot                              */
 /******************************************/
 
-void burn_spot(int x, int y, int c)
+static void
+burn_spot(int x, int y, int c)
 {
 	int i;
 
@@ -523,7 +553,7 @@ void burn_spot(int x, int y, int c)
 /* Draw fire                              */
 /******************************************/
 
-inline void
+static void
 draw_fire(unsigned int load)
 {
 	int x, y, i, j;
@@ -537,13 +567,10 @@ draw_fire(unsigned int load)
 
 	/* Mouse in window */
 	if (proximity) {
-        GdkDisplay* display = gdk_display_get_default();
+		GdkDisplay* display = gdk_display_get_default();
         GdkSeat* seat = gdk_display_get_default_seat(display);
         GdkDevice* pointer = gdk_seat_get_pointer(seat);
         gdk_window_get_device_position (bm.win, pointer, &x, &y, NULL);
-        
-        /* Deprecated */
-		//gdk_window_get_pointer(bm.win, &x, &y, NULL);
 
 		/* Burn spot at mouse position */
 		if ((y > 1 && y < 53) && (x > 1 && x < 53))
@@ -601,9 +628,8 @@ draw_fire(unsigned int load)
 	}
 
 	/* Convert colourmap to rgb */
-	for (i = 0; i < (CMAPSIZE - XMAX); i++) {
+	for (i = 0; i < (CMAPSIZE - XMAX); i++)
 		memcpy(&bm.rgb[i * 4], &bm.flame[bm.cmap[i] * 3], 3);
-    }
 }
 
 /******************************************/
@@ -616,9 +642,7 @@ make_wmfire_dockapp(void)
 #define MASK GDK_BUTTON_PRESS_MASK | GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK | GDK_POINTER_MOTION_HINT_MASK
 
 	GdkWindowAttr attr;
-	GdkWindowAttr attri;
 	Window win;
-	Window iconwin;
 
 	GdkPixbuf *icon;
 
@@ -627,56 +651,40 @@ make_wmfire_dockapp(void)
 
 	memset(&attr, 0, sizeof (GdkWindowAttr));
 
-	attr.width = 57;
-	attr.height = 57;
-	attr.title = "wmfire";
+	attr.width = 64;
+	attr.height = 64;
+	attr.title = resource_name;
 	attr.event_mask = MASK;
 	attr.wclass = GDK_INPUT_OUTPUT;
-    attr.visual = gdk_screen_get_system_visual (gdk_screen_get_default ());
+	attr.visual = gdk_screen_get_system_visual (gdk_screen_get_default ());
 	//attr.colormap = gdk_colormap_get_system(); /* Not needed in GTK3? */
-	attr.wmclass_name = "wmfire";
+	attr.wmclass_name = resource_name;
 	attr.wmclass_class = "wmfire";
 	attr.window_type = GDK_WINDOW_TOPLEVEL;
 
-	/* Make a copy for the iconwin - parameters are the same */
-	memcpy(&attri, &attr, sizeof (GdkWindowAttr));
-	attri.window_type = GDK_WINDOW_CHILD;
-
 	sizehints.flags = USSize;
-	sizehints.width = 57;
-	sizehints.height = 57;
+	sizehints.width = 64;
+	sizehints.height = 64;
 
-	bm.win = gdk_window_new(gdk_get_default_root_window(), &attr, GDK_WA_TITLE | GDK_WA_WMCLASS | GDK_WA_VISUAL);
+	bm.win = gdk_window_new(NULL, &attr, GDK_WA_TITLE | GDK_WA_WMCLASS | GDK_WA_VISUAL);
 	if (!bm.win) {
 		fprintf(stderr, "FATAL: Cannot make toplevel window\n");
 		exit(1);
 	}
 
-	bm.iconwin = gdk_window_new(bm.win, &attri, GDK_WA_TITLE | GDK_WA_WMCLASS);
-	if (!bm.iconwin) {
-		fprintf(stderr, "FATAL: Cannot make icon window\n");
-		exit(1);
-	}
-
 	win = GDK_WINDOW_XID(bm.win);
-	iconwin = GDK_WINDOW_XID(bm.iconwin);
 	XSetWMNormalHints(GDK_WINDOW_XDISPLAY(bm.win), win, &sizehints);
 
 	wmhints.initial_state = WithdrawnState;
-	wmhints.icon_window = iconwin;
+	wmhints.icon_window = win;
 	wmhints.icon_x = 0;
 	wmhints.icon_y = 0;
 	wmhints.window_group = win;
 	wmhints.flags = StateHint | IconWindowHint | IconPositionHint | WindowGroupHint;
 
-    bm.pixmap = gdk_pixbuf_new_from_xpm_data (master_xpm);
-    
     /* No equivalent functions seem to exist in GTK3 */
 	//gdk_window_shape_combine_mask(bm.win, bm.mask, 0, 0);
 	//gdk_window_shape_combine_mask(bm.iconwin, bm.mask, 0, 0);
-
-	//gdk_window_set_back_pixmap(bm.win, bm.pixmap, False);
-	//gdk_window_set_back_pixmap(bm.iconwin, bm.pixmap, False);
 
 #if 0
         gdk_window_set_type_hint(bm.win, GDK_WINDOW_TYPE_HINT_DOCK);
@@ -686,10 +694,10 @@ make_wmfire_dockapp(void)
 #endif
 
     icon = gdk_pixbuf_new_from_xpm_data (icon_xpm);
-    
-    /* No way to set window icon in GTK3 */
-	//gdk_window_set_icon(bm.win, bm.iconwin, icon, NULL);
 
+	/* No way to set window icon in GTK3 */
+	//gdk_window_set_icon(bm.win, bm.iconwin, icon, NULL);
+    
 	gdk_window_show(bm.win);
 
 	/* Moved after gdk_window_show due to change in GTK 2.4 */
@@ -700,6 +708,7 @@ make_wmfire_dockapp(void)
 	if (bm.sticky)
 		gdk_window_stick(bm.win);
 #undef MASK
+
 }
 
 /******************************************/
@@ -742,9 +751,10 @@ convert_colormaps_to_lsb(void) {
 /* Read config file                       */
 /******************************************/
 
-void
+static void
 read_config(int argc, char **argv)
 {
+    
     /* Get screen geometry for 'g' */
     GdkRectangle workarea = {0};
     gdk_monitor_get_workarea(gdk_display_get_primary_monitor(gdk_display_get_default()), &workarea);
@@ -755,7 +765,7 @@ read_config(int argc, char **argv)
 	bm.flame = fire[cmap].data;
 
 	/* Parse command options */
-	while ((i = getopt(argc, argv, "c:mni:s:xF:H:L:pf:lbhg:yS:")) != -1) {
+	while ((i = getopt(argc, argv, "c:mni:r:s:xF:H:L:pf:lbhg:yS:")) != -1) {
 		switch (i) {
 		case 'S':
 			if (optarg)
@@ -788,6 +798,10 @@ read_config(int argc, char **argv)
 		case 'i':
 			if (optarg)
 				strncpy(net_dev, optarg, sizeof (net_dev));
+			break;
+		case 'r':
+			if(optarg)
+				strcpy(resource_name, optarg);
 			break;
 		case 's':
 			if (optarg)
@@ -842,14 +856,14 @@ read_config(int argc, char **argv)
 /* Help                                   */
 /******************************************/
 
-void
+static void
 do_help(void)
 {
 	int i;
 
 	fprintf(stderr, "\nWmfire - Flaming Monitor Dock V %s\n\n", VERSION);
 	fprintf(stderr, "Usage: wmfire [ options... ]\n\n");
-	fprintf(stderr, "\t-g [{+-}X{+-}Y]\t\tinital window position\n");
+	fprintf(stderr, "\t-g [{+-}X{+-}Y]\t\tinitial window position\n");
 	fprintf(stderr, "\t-y\t\t\tset window sticky\n");
 	fprintf(stderr, "\t-c [0..%d]\t\tmonitor smp cpu X\n", GLIBTOP_NCPU-1);
 	fprintf(stderr, "\t-m\t\t\tmonitor memory load\n");
@@ -859,11 +873,12 @@ do_help(void)
 	fprintf(stderr, "\t-s [...]\t\tchange network speed (ppp:%dK) (eth:%dM)\n", NET_SPD_PPP, NET_SPD_ETH);
 	fprintf(stderr, "\t-x\t\t\texclude nice'd cpu load\n");
 	fprintf(stderr, "\t-H [...]\t\tset file maximum (high) value\n");
-	fprintf(stderr, "\t-L [...]\t\tset file minumum (low) value\n");
+	fprintf(stderr, "\t-L [...]\t\tset file minimum (low) value\n");
 	fprintf(stderr, "\t-p\t\t\tfire effect only\n");
 	fprintf(stderr, "\t-f [1..%d]\t\tchange flame colour\n\t\t\t\t", NFLAMES);
 	for (i = 0; i < NFLAMES; i++)
 		fprintf(stderr, "%d:%s ", i + 1, fire[i].text);
 	fprintf(stderr, "\n\t-l\t\t\tlock flame colour and monitor\n");
+	fprintf(stderr, "\t-r [...]\t\tchange resource name (default:%s)\n", resource_name);
 	fprintf(stderr, "\t-h\t\t\tprints this help\n");
 }

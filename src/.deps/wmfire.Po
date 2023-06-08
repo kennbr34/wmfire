@@ -89,26 +89,7 @@ wmfire.o: wmfire.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
  /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
- /usr/include/x86_64-linux-gnu/bits/mathcalls.h /usr/include/arpa/inet.h \
- /usr/include/netinet/in.h \
- /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
- /usr/include/x86_64-linux-gnu/sys/socket.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h \
- /usr/include/x86_64-linux-gnu/bits/socket.h \
- /usr/include/x86_64-linux-gnu/bits/socket_type.h \
- /usr/include/x86_64-linux-gnu/bits/sockaddr.h \
- /usr/include/x86_64-linux-gnu/asm/socket.h \
- /usr/include/asm-generic/socket.h /usr/include/linux/posix_types.h \
- /usr/include/linux/stddef.h \
- /usr/include/x86_64-linux-gnu/asm/posix_types.h \
- /usr/include/x86_64-linux-gnu/asm/posix_types_64.h \
- /usr/include/asm-generic/posix_types.h \
- /usr/include/x86_64-linux-gnu/asm/bitsperlong.h \
- /usr/include/asm-generic/bitsperlong.h \
- /usr/include/x86_64-linux-gnu/asm/sockios.h \
- /usr/include/asm-generic/sockios.h \
- /usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h \
- /usr/include/x86_64-linux-gnu/bits/in.h /usr/include/byteswap.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/gtk-3.0/gdk/gdk.h /usr/include/gtk-3.0/gdk/gdkconfig.h \
  /usr/include/glib-2.0/glib.h /usr/include/glib-2.0/glib/galloca.h \
  /usr/include/glib-2.0/glib/gtypes.h \
@@ -377,6 +358,7 @@ wmfire.o: wmfire.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/harfbuzz/hb-blob.h /usr/include/harfbuzz/hb-common.h \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \
+ /usr/include/x86_64-linux-gnu/bits/stdint-uintn.h \
  /usr/include/harfbuzz/hb-buffer.h /usr/include/harfbuzz/hb-unicode.h \
  /usr/include/harfbuzz/hb-font.h /usr/include/harfbuzz/hb-face.h \
  /usr/include/harfbuzz/hb-set.h /usr/include/harfbuzz/hb-draw.h \
@@ -484,7 +466,7 @@ wmfire.o: wmfire.c /usr/include/stdc-predef.h /usr/include/stdio.h \
  /usr/include/libgtop-2.0/glibtop/mem.h \
  /usr/include/libgtop-2.0/glibtop/netload.h session.h flamedefault.h \
  flamecorona.h flameblue.h flamegreen.h flameorange.h flamedarkblue.h \
- flamegreen_msb.h flamecorona_msb.h master.xpm icon.xpm
+ flamegreen_msb.h flamecorona_msb.h icon.xpm
 /usr/include/stdc-predef.h:
 /usr/include/stdio.h:
 /usr/include/x86_64-linux-gnu/bits/libc-header-start.h:
@@ -588,28 +570,6 @@ wmfire.o: wmfire.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 /usr/include/x86_64-linux-gnu/bits/fp-fast.h:
 /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h:
-/usr/include/arpa/inet.h:
-/usr/include/netinet/in.h:
-/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
-/usr/include/x86_64-linux-gnu/sys/socket.h:
-/usr/include/x86_64-linux-gnu/bits/types/struct_iovec.h:
-/usr/include/x86_64-linux-gnu/bits/socket.h:
-/usr/include/x86_64-linux-gnu/bits/socket_type.h:
-/usr/include/x86_64-linux-gnu/bits/sockaddr.h:
-/usr/include/x86_64-linux-gnu/asm/socket.h:
-/usr/include/asm-generic/socket.h:
-/usr/include/linux/posix_types.h:
-/usr/include/linux/stddef.h:
-/usr/include/x86_64-linux-gnu/asm/posix_types.h:
-/usr/include/x86_64-linux-gnu/asm/posix_types_64.h:
-/usr/include/asm-generic/posix_types.h:
-/usr/include/x86_64-linux-gnu/asm/bitsperlong.h:
-/usr/include/asm-generic/bitsperlong.h:
-/usr/include/x86_64-linux-gnu/asm/sockios.h:
-/usr/include/asm-generic/sockios.h:
-/usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h:
-/usr/include/x86_64-linux-gnu/bits/in.h:
-/usr/include/byteswap.h:
 /usr/include/gtk-3.0/gdk/gdk.h:
 /usr/include/gtk-3.0/gdk/gdkconfig.h:
 /usr/include/glib-2.0/glib.h:
@@ -911,6 +871,7 @@ wmfire.o: wmfire.c /usr/include/stdc-predef.h /usr/include/stdio.h \
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h:
 /usr/include/stdint.h:
 /usr/include/x86_64-linux-gnu/bits/wchar.h:
+/usr/include/x86_64-linux-gnu/bits/stdint-uintn.h:
 /usr/include/harfbuzz/hb-buffer.h:
 /usr/include/harfbuzz/hb-unicode.h:
 /usr/include/harfbuzz/hb-font.h:
@@ -1043,5 +1004,4 @@ flameorange.h:
 flamedarkblue.h:
 flamegreen_msb.h:
 flamecorona_msb.h:
-master.xpm:
 icon.xpm:

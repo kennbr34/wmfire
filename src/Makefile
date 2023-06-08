@@ -99,8 +99,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__wmfire_SOURCES_DIST = wmfire.c flamedefault.h flamecorona.h \
-	flameblue.h flamegreen.h flameorange.h flamedarkblue.h \
-	flamegreen_msb.h flamecorona_msb.h session.h session.c
+	flameblue.h flamegreen.h session.h session.c
 am_wmfire_OBJECTS = wmfire.$(OBJEXT)
 #am_wmfire_OBJECTS = wmfire.$(OBJEXT) session.$(OBJEXT)
 wmfire_OBJECTS = $(am_wmfire_OBJECTS)
@@ -210,10 +209,10 @@ SHELL = /bin/bash
 STRIP = 
 VERSION = 1.2.4
 XMKMF = 
-abs_builddir = /home/ken/Downloads/wmfire-1.2.5/src
-abs_srcdir = /home/ken/Downloads/wmfire-1.2.5/src
-abs_top_builddir = /home/ken/Downloads/wmfire-1.2.5
-abs_top_srcdir = /home/ken/Downloads/wmfire-1.2.5
+abs_builddir = /home/ken/Downloads/wmfire-1.2.4/src
+abs_srcdir = /home/ken/Downloads/wmfire-1.2.4/src
+abs_top_builddir = /home/ken/Downloads/wmfire-1.2.4
+abs_top_srcdir = /home/ken/Downloads/wmfire-1.2.4
 ac_ct_CC = gcc
 am__include = include
 am__leading_dot = .
@@ -233,7 +232,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/ken/Downloads/wmfire-1.2.5/install-sh
+install_sh = ${SHELL} /home/ken/Downloads/wmfire-1.2.4/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -255,17 +254,17 @@ top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
 wmfire_SOURCES = wmfire.c \
-	flamedefault.h flamecorona.h flameblue.h flamegreen.h flameorange.h flamedarkblue.h flamegreen_msb.h flamecorona_msb.h
+	flamedefault.h flamecorona.h flameblue.h flamegreen.h
 
 #wmfire_SOURCES = wmfire.c \
 #	session.h session.c \
-#	flamedefault.h flamecorona.h flameblue.h flamegreen.h flameorange.h flamedarkblue.h flamegreen_msb.h flamecorona_msb.h
+#	flamedefault.h flamecorona.h flameblue.h flamegreen.h
 
 wmfire_LDADD =  -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz  -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0 -lgtop-2.0 -lglib-2.0
 AM_LDFLAGS = -lXext -lX11 \
 	-L/usr/X11R6/lib -L/usr/local/lib
 
-INCLUDES = -I/usr/X11R6/include \
+AM_CPPFLAGS = -I/usr/X11R6/include \
 	-I/usr/local/include
 
 all: all-am

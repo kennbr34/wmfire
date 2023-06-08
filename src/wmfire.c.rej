@@ -1,0 +1,52 @@
+--- src/wmfire.c
++++ src/wmfire.c
+@@ -134,6 +134,7 @@
+ int cpu_id = 0;
+ int cpu_nice = 1;
+ char net_dev[16] = "ppp0";
++char resource_name[64] = "wmfire";
+ int net_spd = 0;
+ char *file_name = NULL;
+ int file_max = 100;
+@@ -569,12 +570,12 @@
+ 
+ 	attr.width = 64;
+ 	attr.height = 64;
+-	attr.title = "wmfire";
++	attr.title = resource_name;
+ 	attr.event_mask = MASK;
+ 	attr.wclass = GDK_INPUT_OUTPUT;
+ 	attr.visual = gdk_visual_get_system();
+ 	attr.colormap = gdk_colormap_get_system();
+-	attr.wmclass_name = "wmfire";
++	attr.wmclass_name = resource_name;
+ 	attr.wmclass_class = "wmfire";
+ 	attr.window_type = GDK_WINDOW_TOPLEVEL;
+ 
+@@ -653,7 +654,7 @@
+ 	bm.flame = fire[cmap].data;
+ 
+ 	/* Parse command options */
+-	while ((i = getopt(argc, argv, "c:mni:s:xF:H:L:pf:lbhg:yS:")) != -1) {
++	while ((i = getopt(argc, argv, "c:mni:r:s:xF:H:L:pf:lbhg:yS:")) != -1) {
+ 		switch (i) {
+ 		case 'S':
+ 			if (optarg)
+@@ -687,6 +688,10 @@
+ 			if (optarg)
+ 				strncpy(net_dev, optarg, sizeof (net_dev));
+ 			break;
++		case 'r':
++			if(optarg)
++				strcpy(resource_name, optarg);
++			break;
+ 		case 's':
+ 			if (optarg)
+ 				net_spd = atoi(optarg);
+@@ -767,5 +772,6 @@
+ 		fprintf(stderr, "%d:%s ", i + 1, fire[i].text);
+ 	fprintf(stderr, "\n\t-l\t\t\tlock flame colour and monitor\n");
+ 	fprintf(stderr, "\t-b\t\t\tactivate broken window manager fix\n");
++	fprintf(stderr, "\t-r [...]\t\tchange resource name (default:%s)\n", resource_name);
+ 	fprintf(stderr, "\t-h\t\t\tprints this help\n");
+ }

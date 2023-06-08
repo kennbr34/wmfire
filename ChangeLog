@@ -1,3 +1,10 @@
+Changes upto version 1.2.5:
+--------------------------
+
+o Rewritten to use GDK3 and Cairo
+o New colors added
+o Broken window-manager option removed
+
 Changes upto version 1.2.4:
 --------------------------
 

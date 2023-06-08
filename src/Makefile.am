@@ -3,10 +3,10 @@ bin_PROGRAMS = wmfire
 if SESSION
 wmfire_SOURCES = wmfire.c \
 	session.h session.c \
-	flamedefault.h flamecorona.h flameblue.h flamegreen.h
+	flamedefault.h flamecorona.h flameblue.h flamegreen.h flameorange.h flamedarkblue.h flamegreen_msb.h flamecorona_msb.h
 else
 wmfire_SOURCES = wmfire.c \
-	flamedefault.h flamecorona.h flameblue.h flamegreen.h
+	flamedefault.h flamecorona.h flameblue.h flamegreen.h flameorange.h flamedarkblue.h flamegreen_msb.h flamecorona_msb.h
 endif	 
 
 wmfire_LDADD = @LDFLAGS@

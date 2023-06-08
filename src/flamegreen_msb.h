@@ -1,8 +1,6 @@
-/* Green flame effect */
+/* Green-MSB flame effect */
 
-static unsigned char flamegreen[256*3+1];
-
-static unsigned char flamegreen_old[256*3+1] = {
+static unsigned char flamegreen_msb[256*3+1] = {
   "\0\7\17\0\6\13\0\7\13\0\7\13\0\6\11\0\7\11\0\7\11\0\6\7\0\6\7\0\7\7\0\7\7"
   "\0\7\7\0\5\5\0\5\5\0\5\5\0\5\5\0\5\5\0\5\5\0\3\2\0\3\2\0\3\2\0\3\2\0\3\2"
   "\0\3\2\0\3\2\0\3\2\0\3\2\0\1\0\0\1\0\0\1\0\0\1\0\0\1\0\0\1\0\0\1\0\0\1\0"

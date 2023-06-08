@@ -35,13 +35,13 @@ AM_CONDITIONAL(SESSION, test "x$session" = "xon")
 
 AC_PATH_PROG(config, pkg-config)
 
-AC_CACHE_CHECK([for gdk2 includes], GDKINCS, [GDKINCS=`$config --cflags gtk+-2.0`])
-AC_CACHE_CHECK([for gdk2 libs], GDKLIBS, [GDKLIBS=`$config --libs gtk+-2.0 | sed -e "s/-lgtk-x11-2.0//g" -e "s/-latk-1.0//g"`])
+AC_CACHE_CHECK([for gdk3 includes], GDKINCS, [GDKINCS=`$config --cflags gtk+-3.0`])
+AC_CACHE_CHECK([for gdk3 libs], GDKLIBS, [GDKLIBS=`$config --libs gtk+-3.0 | sed -e "s/-lgtk-x11-3.0//g" -e "s/-latk-1.0//g"`])
 
 AC_CACHE_CHECK([for libgtop2 includes], GTOPINCS, [GTOPINCS=`$config --cflags libgtop-2.0`])
 AC_CACHE_CHECK([for libgtop2 libs], GTOPLIBS, [GTOPLIBS=`$config --libs libgtop-2.0`])
 
-CFLAGS="$CFLAGS $GDKINCS $GTOPINCS"
+CFLAGS="$CFLAGS $GDKINCS $GTOPINCS -g3 -O0 "
 LDFLAGS="$LDFLAGS $GDKLIBS $GTOPLIBS"
 
 AC_CHECK_FUNCS(strstr)

@@ -1,9 +1,6 @@
-/* Natural flame effect */
+/* Dark blue flame effect */
 
-static unsigned char flamedefault[256*3+1];
-
-
-static unsigned char flamedefault_old[256*3+1] = {
+static unsigned char flamedarkblue[256*3+1] = {
   "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
   "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
   "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"

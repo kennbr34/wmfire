@@ -1,3 +1,9 @@
+Changes upto version 1.2.7:
+--------------------------
+
+o Removed convert_to_lsb() function in favor of just replacing the old MSB hard-coded values with
+newer hard-coded LSB values
+
 Changes upto version 1.2.6:
 --------------------------
 

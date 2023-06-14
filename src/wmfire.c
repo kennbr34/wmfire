@@ -178,9 +178,6 @@ main(int argc, char **argv)
 
 	/* Zero main data structures */
 	memset(&bm, 0, sizeof (bm));
-    
-    /* Convert colormaps to LSB */
-    convert_colormaps_to_lsb();
 
 	/* Parse command line */
 	read_config(argc, argv);
@@ -709,42 +706,6 @@ make_wmfire_dockapp(void)
 		gdk_window_stick(bm.win);
 #undef MASK
 
-}
-
-/******************************************/
-/* Convert colormaps to LSB               */
-/******************************************/
-
-/* Colormaps were originally designed to be RGB bytes in MSB (Most Significant Bit)
- * order, but Cairo expects RGB bytes to be in LSB (Least Significant Bit) order so
- * this will swap the R and B bits and keep the G bits in place so that the colors
- * represent their text description */
-
-void
-convert_colormaps_to_lsb(void) {
-    for(int i = 0; i < ((256*3+1)); i += 3) {
-        flamedefault[i + 0] = flamedefault_old[i + 2];
-        flamedefault[i + 1] = flamedefault_old[i + 1];
-        flamedefault[i + 2] = flamedefault_old[i + 0];
-    }
-    
-    for(int i = 0; i < ((256*3+1)); i += 3) {
-        flamecorona[i + 0] = flamecorona_old[i + 2];
-        flamecorona[i + 1] = flamecorona_old[i + 1];
-        flamecorona[i + 2] = flamecorona_old[i + 0];
-    }
-    
-    for(int i = 0; i < ((256*3+1)); i += 3) {
-        flamegreen[i + 0] = flamegreen_old[i + 2];
-        flamegreen[i + 1] = flamegreen_old[i + 1];
-        flamegreen[i + 2] = flamegreen_old[i + 0];
-    }
-    
-    for(int i = 0; i < ((256*3+1)); i += 3) {
-        flameblue[i + 0] = flameblue_old[i + 2];
-        flameblue[i + 1] = flameblue_old[i + 1];
-        flameblue[i + 2] = flameblue_old[i + 0];
-    }
 }
 
 /******************************************/

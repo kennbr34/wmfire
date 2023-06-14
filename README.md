@@ -1,1 +1,1 @@
-# wmfire
+./README

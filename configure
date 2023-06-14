@@ -5504,7 +5504,7 @@ fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $GTOPLIBS" >&5
 printf "%s\n" "$GTOPLIBS" >&6; }
 
-CFLAGS="$CFLAGS $GDKINCS $GTOPINCS -g3 -O0 "
+CFLAGS="$CFLAGS $GDKINCS $GTOPINCS"
 LDFLAGS="$LDFLAGS $GDKLIBS $GTOPLIBS"
 
 ac_fn_c_check_func "$LINENO" "strstr" "ac_cv_func_strstr"

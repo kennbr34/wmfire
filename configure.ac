@@ -1,6 +1,6 @@
-AC_INIT(src/wmfire.c)
-
-AM_INIT_AUTOMAKE(wmfire, 1.2.4)
+AC_INIT([wmfire],[1.2.7])
+AC_CONFIG_SRCDIR([src/wmfire.c])
+AM_INIT_AUTOMAKE
 
 AC_PROG_AWK
 AC_PROG_CC
@@ -13,7 +13,6 @@ AC_CHECK_LIB(Xext, main)
 AC_CHECK_LIB(m,sincos)
 
 AC_HEADER_DIRENT
-AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS(unistd.h)
 
@@ -33,17 +32,16 @@ if test "x$session" = "xon" ; then
 fi
 AM_CONDITIONAL(SESSION, test "x$session" = "xon")
 
-AC_PATH_PROG(config, pkg-config)
+PKG_CHECK_MODULES([GTK3],[gtk+-3.0],[
+  GTK3_LIBS=`echo "$GTK3_LIBS" | sed -e "s/-lgtk-x11-2.0//g" -e "s/-latk-1.0//g"`
+])
 
-AC_CACHE_CHECK([for gdk3 includes], GDKINCS, [GDKINCS=`$config --cflags gtk+-3.0`])
-AC_CACHE_CHECK([for gdk3 libs], GDKLIBS, [GDKLIBS=`$config --libs gtk+-3.0 | sed -e "s/-lgtk-x11-3.0//g" -e "s/-latk-1.0//g"`])
+PKG_CHECK_MODULES([GTOP],[libgtop-2.0])
 
-AC_CACHE_CHECK([for libgtop2 includes], GTOPINCS, [GTOPINCS=`$config --cflags libgtop-2.0`])
-AC_CACHE_CHECK([for libgtop2 libs], GTOPLIBS, [GTOPLIBS=`$config --libs libgtop-2.0`])
-
-CFLAGS="$CFLAGS $GDKINCS $GTOPINCS"
-LDFLAGS="$LDFLAGS $GDKLIBS $GTOPLIBS"
+CFLAGS="$CFLAGS $GTK3_CFLAGS $GTOP_CFLAGS"
+LDFLAGS="$LDFLAGS $GTK3_LIBS $GTOP_LIBS"
 
 AC_CHECK_FUNCS(strstr)
 
-AC_OUTPUT(Makefile src/Makefile)
+AC_CONFIG_FILES([Makefile src/Makefile])
+AC_OUTPUT

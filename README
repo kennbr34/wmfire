@@ -27,12 +27,19 @@ values, a spinning disk platter is shown.
 Dependencies
 ------
 
+pkg-config >= 0.9.0
+
+autoconf
+
+automake
+
 GTK >= 3.0
 
 GTop >= 2.0
 
 Compile and Install
 ------
+\$ autoreconf
 
 \$ ./configure
 

@@ -28,6 +28,7 @@ Dependencies
 ------
 
 GTK >= 3.0
+
 GTop >= 2.0
 
 Compile and Install

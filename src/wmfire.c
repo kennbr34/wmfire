@@ -625,6 +625,8 @@ draw_fire(unsigned int load)
 	}
 
 	/* Convert colourmap to rgb */
+    /* Use i * 4 to index &bm.rgb instead of i * 3 so that the upper 8 bits of the 32 bits
+     * passed to cairo_image_surface_create_for_data() are unused as required by CAIRO_FORMAT_RGB24*/
 	for (i = 0; i < (CMAPSIZE - XMAX); i++)
 		memcpy(&bm.rgb[i * 4], &bm.flame[bm.cmap[i] * 3], 3);
 }

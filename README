@@ -24,8 +24,35 @@ values, a spinning disk platter is shown.
 
 (Note that not all window managers support all mouse over effects.)
 
-This uses the GDK and libgtop libraries and should be portable to most Unix
-architectures with the Gnome enviroment.
+Dependencies
+------
+
+GTK >= 3.0
+GTop >= 2.0
+
+Compile and Install
+------
+
+$ ./configure
+$ make
+# make install
+
+Notes
+------
+
+This version of wmfire incorporates Debian package managers' patches, as well
+as changes to use GTK3 libraries instead of GTK2.
+
+GTK3 uses Cairo to draw the color maps to the screen, which requires to the RGB
+values to be in Least Significant Bit order. Originally the color maps were in
+Most Significant Bit order, so they have been converted to Least Significant Bit
+and the old ones used to add new colors of flame.
+
+I have not been able to contact the original author, but if you have any questions
+or comments about bugs, etc. you can contact me at <kennbr34@gmail.com>
+
+Original Notes
+------
 
 The original GDK routine came from the ubercool wmfishtime dock application
 written by timecop over at http://www.ne.jp/asahi/linux/timecop/ which has
@@ -33,7 +60,10 @@ swimming fish, an anti-aliased analog clock, and alpha blended bubbles.
 Using this is much faster than the historic wmgeneral source.
 
 If you discover any bugs then please report them to me at
-<kennbr34@gmail.com> where I'd be happy to answer any questions.
+<swanson@ukfsn.org> where I'd be happy to answer any questions.
+
+Copying
+------
 
 Wmfire is licensed through the GNU General Public License.
 Read the COPYING file for the complete GNU license.

@@ -33,9 +33,9 @@ GTop >= 2.0
 Compile and Install
 ------
 
-$ ./configure
-$ make
-# make install
+\$ ./configure
+\$ make
+\# make install
 
 Notes
 ------

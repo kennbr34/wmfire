@@ -34,7 +34,9 @@ Compile and Install
 ------
 
 \$ ./configure
+
 \$ make
+
 \# make install
 
 Notes
